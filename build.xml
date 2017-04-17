@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<project name="sales_system" default="run" basedir=".">
+
+    <path id="run.libs">
+        <fileset dir="lib/java">
+            <include name="**/*.jar" />
+        </fileset>
+    </path>
+
+    <target name="clean">
+        <delete dir="build" />
+    </target>
+
+    <target name="compile">
+        <mkdir dir="build/java" />
+        <javac destdir="build/java"
+               debug="true"
+               encoding="UTF-8"
+               failonerror="true">
+            <src path="src/java" />
+            <classpath refid="run.libs" />
+        </javac>
+    </target>
+
+    <target name="run" depends="compile">
+        <java fork="yes" dir="build/java" classname="casestudy.Webservice">
+            <classpath location="build/java" />
+            <classpath refid="run.libs" />
+        </java>
+    </target>
+
+
+
+    <taskdef name="testng" classname="org.testng.TestNGAntTask">
+        <classpath id="classpath.test.libs">
+            <fileset dir="lib/test" />
+        </classpath>
+    </taskdef>
+
+    <target name="compile-tests" depends="compile">
+        <mkdir dir="build/test/java" />
+        <javac destdir="build/test/java"
+               debug="true"
+               encoding="UTF-8"
+               failonerror="true">
+            <src path="src/test/java" />
+            <classpath location="build/java" />
+            <classpath refid="run.libs" />
+            <classpath refid="classpath.test.libs" />
+        </javac>
+    </target>
+
+    <target name="test" depends="compile-tests">
+        <testng classpathref="classpath.test.libs" outputdir="build/testng" haltonfailure="true">
+            <classpath location="build/java" />
+            <classpath location="build/test/java" />
+            <classpath refid="run.libs" />
+
+            <classfileset dir="build/test/java" includes="**/*Test.class" />
+
+        </testng>
+    </target>
+
+</project>

@@ -1,0 +1,15 @@
+#!/bin/bash
+set -eu
+
+BASE_DIR=$(readlink -m $(dirname $0))
+
+pushd ${BASE_DIR} >> /dev/null
+
+echo "BASE_DIR: ${BASE_DIR}"
+
+DOCKER_IMAGE=casestudy
+echo "Building docker image: '${DOCKER_IMAGE}'"
+docker build -t ${DOCKER_IMAGE} .
+
+popd >> /dev/null
+
